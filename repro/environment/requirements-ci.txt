@@ -1,0 +1,15 @@
+# Core DL stack (CPU wheels)
+torch
+torchvision
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+# Quant/ONNX stack
+onnx
+onnxruntime
+
+# Utilities
+timm
+pyyaml
+jsonschema
+psutil
+matplotlib
