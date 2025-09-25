@@ -1,0 +1,25 @@
+# CODEOWNERS
+
+# Default owners (catch-all)
+*                                   @abdulvahapmutlu
+
+# Source code
+/src/                                @abdulvahapmutlu
+
+# Configs & schemas
+/configs/                            @abdulvahapmutlu
+
+# Reporting & docs surfaces
+/src/report/                         @abdulvahapmutlu
+/README.md                           @abdulvahapmutlu
+/.github/workflows/                  @abdulvahapmutlu
+
+# Experiment scripts
+/scripts/                            @abdulvahapmutlu
+
+# Repro kit & environment locks
+/repro/                              @abdulvahapmutlu
+
+# Artifacts
+/artifacts/reports/calibration_indices/   @abdulvahapmutlu
+/artifacts/reports/splits/                @abdulvahapmutlu
