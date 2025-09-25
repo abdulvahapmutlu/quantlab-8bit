@@ -1,0 +1,30 @@
+visuals:
+  seed_ref: "repro/seeds.json"
+
+  weights_hist:
+    bins: 128
+    per_channel: true
+    max_layers: 32
+    out_dir: "artifacts/reports/viz/weights"
+
+  activations_hist:
+    bins: 128
+    overlay_clip_percentiles: [99.0, 99.5, 99.9]
+    sample_batches: 8
+    batch_size: 64
+    out_dir: "artifacts/reports/viz/activations"
+
+  error_heatmap:
+    # uses Step 8 parity reports (per-tap cos/mse)
+    metric: "mse"     # or "cosine" (will use 1-cos for heat)
+    out_dir: "artifacts/reports/viz/error_heatmaps"
+
+  saliency:
+    method: "occlusion"    # safer default (ONNX-friendly). alt: "gradcam" (Torch-only)
+    n_images: 12
+    selection: "hard_cases" # hard_cases | random | class_balanced
+    out_dir: "artifacts/reports/viz/saliency"
+
+  outliers:
+    top_k: 10              # show top-K offending layers/channels by drift
+    out_dir: "artifacts/reports/viz/outliers"

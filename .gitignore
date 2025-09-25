@@ -1,0 +1,45 @@
+# Byte-compiled / caches
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual envs
+.env/
+.venv/
+venv/
+
+# IDE/editor
+.vscode/
+.idea/
+**/.idea/
+*.iml
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Repro local cache and machine/env manifests
+.repro/
+repro/system.json
+repro/data_hash.json
+repro/manifest.json
+repro/environment/system.json
+
+# Artifacts (generated)
+artifacts/**
+
+# Allow small, deterministic inputs for reproducibility
+!artifacts/README.md
+!artifacts/reports/
+artifacts/reports/**
+!artifacts/reports/calibration_indices/
+!artifacts/reports/calibration_indices/*.json
+!artifacts/reports/splits/
+!artifacts/reports/splits/*.json
+
+# Model binaries (prefer Releases/LFS)
+*.onnx
+*.pt
+*.pth

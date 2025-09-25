@@ -1,0 +1,8 @@
+dataset:
+  name: cifar10
+  # change this to your local path if different:
+  root: "C:/data/cifar10"
+  num_classes: 10
+  input_size: [3, 32, 32]
+  # you already have this split file:
+  val_split_file: "artifacts/reports/splits/cifar10_train_val.json"

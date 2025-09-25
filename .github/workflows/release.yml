@@ -1,0 +1,47 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  package-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Build leaderboard (safety; ok if already built)
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml jsonschema psutil matplotlib onnx onnxruntime
+          mkdir -p artifacts/reports/leaderboard_html
+          python -m src.report.leaderboard_builder \
+            --matrix-config configs/experiment_matrix.yaml \
+            --leaderboard-config configs/reporting/leaderboard.yaml \
+            --bench-csv artifacts/reports/bench/ort_cpu_results.csv || true
+
+      - name: Bundle artifacts
+        run: |
+          mkdir -p dist
+          tar -czf dist/quantlab-8bit-artifacts.tgz \
+            artifacts/reports/leaderboard.csv \
+            artifacts/reports/leaderboard.md \
+            artifacts/reports/leaderboard_html || true
+          tar -czf dist/quantlab-8bit-configs.tgz configs
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/quantlab-8bit-artifacts.tgz
+            dist/quantlab-8bit-configs.tgz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

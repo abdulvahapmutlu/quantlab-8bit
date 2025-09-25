@@ -1,0 +1,4 @@
+model:
+  name: mobilenet_v2
+  source: torchvision
+  pretrained: true

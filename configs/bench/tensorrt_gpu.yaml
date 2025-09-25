@@ -1,0 +1,21 @@
+provider: "TensorrtExecutionProvider"
+
+session_options:
+  trt_fp16: false
+  trt_int8: true                   # if using INT8 with calibration cache
+  trt_engine_cache_enable: true
+  trt_engine_cache_path: "artifacts/reports/trt_cache"
+
+device:
+  gpus: [0]
+  workspace_size_mb: 2048
+
+measurement:
+  warmup_iters: 100
+  measure_iters: 300
+  batches: [1, 8, 32]
+  repeats: 3
+
+reporting:
+  out_dir: "artifacts/reports/bench_gpu"
+  file_prefix: "trt_gpu"

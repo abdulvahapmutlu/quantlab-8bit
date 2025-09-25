@@ -1,0 +1,12 @@
+model:
+  name: resnet18
+  framework: pytorch
+  source: torchvision
+  weights: IMAGENET1K_V1
+  input_size: [3, 224, 224]
+  num_classes: auto
+  fuse_bn: true
+
+quantization_notes:
+  preferred_weight_granularity: per_channel
+  residuals_are_sensitive: false

@@ -1,0 +1,44 @@
+[project]
+name = "QuantLab-8bit"
+root = "."
+manifest_path = "repro/manifest.json"
+staleness_hours = 24
+
+[hash]
+# Hash all code/config that should invalidate results when changed
+include = [
+  "src",
+  "configs",
+  ".github/workflows",
+  "README.md",
+  "pyproject.toml",
+  "requirements.txt",
+  "requirements-dev.txt"
+]
+# Ignore volatile stuff
+exclude = [
+  "artifacts",
+  "notebooks",
+  ".venv",
+  "__pycache__",
+  ".git",
+  ".dvc",
+  ".mypy_cache",
+  ".pytest_cache"
+]
+
+[data]
+# Fill these with your actual dataset roots before first hash
+roots = [
+  "C:/data/cifar10",
+  "C:/data/tiny-imagenet"
+]
+
+[env]
+# What to capture into system.json (env freeze)
+capture = ["python", "pip", "pytorch", "onnxruntime", "cuda"]
+system_out = "repro/system.json"
+
+[calibration]
+# Where we’ll store stratified calibration indices
+indices_out = "artifacts/reports/calibration_indices"

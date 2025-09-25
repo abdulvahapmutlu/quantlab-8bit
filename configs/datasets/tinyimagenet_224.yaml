@@ -1,0 +1,6 @@
+dataset:
+  name: tinyimagenet
+  root: "C:/data/tiny-imagenet-200"  # adjust
+  num_classes: 200
+  input_size: [3, 224, 224]          # upscale for ViT/EfficientNet
+  val_split_file: "artifacts/reports/splits/tiny-imagenet_train_val.json"

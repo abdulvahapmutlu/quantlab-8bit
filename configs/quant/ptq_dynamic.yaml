@@ -1,0 +1,8 @@
+# Dynamic quantization baseline (usually weaker on CNNs; included for completeness)
+ptq_dynamic:
+  weight_bits: 8
+  activation_bits: 8
+  quantize_ops: ["Linear", "Gemm", "MatMul"]   # attention-like ops if present
+  fallback_fp32_ops: ["Conv", "BatchNormalization", "Pooling"]
+  out_dir: "artifacts/onnx/ptq_dynamic"
+  report_dir: "artifacts/reports/ptq_dynamic"

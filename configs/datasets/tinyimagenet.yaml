@@ -1,0 +1,6 @@
+dataset:
+  name: tinyimagenet
+  root: "C:/data/tiny-imagenet-200"  # adjust to your path
+  num_classes: 200
+  input_size: [3, 64, 64]
+  val_split_file: "artifacts/reports/splits/tiny-imagenet_train_val.json"

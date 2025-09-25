@@ -1,0 +1,40 @@
+leaderboard:
+  csv_out: "artifacts/reports/leaderboard.csv"
+  md_out:  "artifacts/reports/leaderboard.md"
+
+  columns:
+    - dataset
+    - model
+    - method                # fp32 | ptq_static:<recipe_id> | ptq_dynamic | qat
+    - top1                  # absolute Top-1
+    - top5                  # absolute Top-5 (optional on CIFAR-10)
+    - d_top1_pp             # (method - fp32) in percentage points
+    - size_mb
+    - b1_p50_ms
+    - b1_p95_ms
+    - b8_p50_ms
+    - b8_p95_ms
+    - b1_throughput_rps
+    - notes
+
+  sort:
+    by: [dataset, model, method_priority, b1_p50_ms]
+    method_priority: ["fp32", "ptq_static", "ptq_dynamic", "qat"]
+
+  thresholds:
+    ptq_max_drop_pp: 2.5
+    qat_max_drop_pp: 0.5
+    min_speedup_x_b1: 1.3           # vs FP32 p50 at B=1
+
+  emoji_rules:
+    accuracy:
+      good:   { max_abs_drop_pp: 0.5,  emoji: "🟢" }
+      ok:     { max_abs_drop_pp: 2.5,  emoji: "🟡" }
+      bad:    { max_abs_drop_pp: 99.0, emoji: "🔴" }
+    latency_speedup:
+      strong: { min_speedup_x: 1.7, emoji: "🚀" }
+      ok:     { min_speedup_x: 1.3, emoji: "⚡" }
+      weak:   { min_speedup_x: 1.0, emoji: "🐢" }
+
+  hardware_disclosure:
+    include_fields: ["cpu_model", "cpu_threads", "ram_gb", "os", "ort_version"]

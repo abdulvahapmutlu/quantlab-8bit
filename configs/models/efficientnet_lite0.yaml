@@ -1,0 +1,4 @@
+model:
+  name: efficientnet_lite0
+  source: timm
+  pretrained: true

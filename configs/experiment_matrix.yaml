@@ -1,0 +1,13 @@
+# Declarative experiment grid — keeps orchestration code simple and auditable.
+matrix:
+  datasets: ["cifar10"]                 # add "tiny-imagenet" when ready
+  models: ["mobilenet_v2", "resnet18"]  # add "vit_tiny_patch16_224", "efficientnet_lite0" later
+  methods:
+    - fp32
+    - ptq_static: ["pcw_symW_asymA_minmax_p995", "pcw_symW_asymA_mse_p999"]
+    - ptq_dynamic
+    - qat
+benchmarks:
+  onnxruntime_cpu: "configs/bench/onnxruntime_cpu.yaml"
+reporting:
+  leaderboard: "configs/reporting/leaderboard.yaml"

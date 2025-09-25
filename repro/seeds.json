@@ -1,0 +1,15 @@
+{
+  "global": 42,
+  "python_random": 42,
+  "numpy": 42,
+  "torch": 42,
+  "torch_cuda": 42,
+  "torch_backends": {
+    "cudnn_deterministic": true,
+    "cudnn_benchmark": false
+  },
+  "dataloader": {
+    "workers": 0,
+    "generator_seed": 42
+  }
+}

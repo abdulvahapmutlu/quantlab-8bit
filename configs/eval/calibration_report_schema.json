@@ -1,0 +1,43 @@
+{
+  "title": "PTQ Static Calibration Report",
+  "type": "object",
+  "required": ["dataset","model","recipe_id","opset","quant","calibration","graph"],
+  "properties": {
+    "dataset": {"type":"string"},
+    "model": {"type":"string"},
+    "recipe_id": {"type":"string"},
+    "opset": {"type":"integer"},
+    "quant": {
+      "type":"object",
+      "properties": {
+        "weight_bits":{"type":"integer"},
+        "activation_bits":{"type":"integer"},
+        "per_channel_weights":{"type":"boolean"},
+        "weight_symmetric":{"type":"boolean"},
+        "act_symmetric":{"type":"boolean"},
+        "range_estimator":{"type":"string"},
+        "percentile_clip":{"type":["number","null"]}
+      }
+    },
+    "calibration": {
+      "type":"object",
+      "properties": {
+        "indices_file":{"type":"string"},
+        "batches":{"type":"integer"},
+        "batch_size":{"type":"integer"},
+        "num_samples_seen":{"type":"integer"},
+        "layer_stats_file":{"type":"string"}
+      }
+    },
+    "graph": {
+      "type":"object",
+      "properties": {
+        "num_nodes":{"type":"integer"},
+        "num_qdq_pairs":{"type":"integer"},
+        "unsupported_nodes":[] ,
+        "notes":{"type":"string"}
+      },
+      "additionalProperties": true
+    }
+  }
+}

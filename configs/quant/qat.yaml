@@ -1,0 +1,35 @@
+qat:
+  weight_bits: 8
+  activation_bits: 8
+
+  schedule:
+    warmup_fp32_epochs: 5          # observers collect stats; no fake-quant yet
+    bn_freeze_epoch: 5
+    qat_epochs: 15                 # total ~20 epochs incl. warmup
+    observer_enable_epoch: 6       # turn on fake-quant after warmup
+    lr_multiplier_qat_phase: 0.5   # optional: lower LR when quantization starts
+
+  observers:
+    activations:
+      type: moving_avg_minmax       # or percentile; moving avg is robust
+      momentum: 0.9
+      symmetric: false
+      per_channel: false
+      clip_percentile: 99.5         # effective if type=percentile
+      learnable_clip: false         # set true only if framework supports LSQ-ish behavior
+    weights:
+      type: per_channel_minmax
+      symmetric: true
+      per_channel: true
+      ch_axis: "out"               # conv: out-channels
+
+  bias_correction:
+    enabled: true
+    method: simple
+
+  export:
+    out_dir: "artifacts/onnx/qat"
+    keep_checkpoints: true          # store .pt/.pth alongside ONNX
+    checkpoints_dir: "artifacts/checkpoints"
+
+  report_dir: "artifacts/reports/qat"

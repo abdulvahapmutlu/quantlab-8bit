@@ -1,0 +1,29 @@
+{
+  "title": "QAT Export Report",
+  "type": "object",
+  "required": ["dataset","model","opset","schedule","export","out_onnx"],
+  "properties": {
+    "dataset": {"type":"string"},
+    "model": {"type":"string"},
+    "opset": {"type":"integer"},
+    "schedule": {
+      "type":"object",
+      "properties": {
+        "warmup_fp32_epochs":{"type":"integer"},
+        "bn_freeze_epoch":{"type":"integer"},
+        "observer_enable_epoch":{"type":"integer"},
+        "qat_epochs":{"type":"integer"}
+      }
+    },
+    "export": {
+      "type":"object",
+      "properties": {
+        "weight_bits":{"type":"integer"},
+        "activation_bits":{"type":"integer"},
+        "format":{"type":"string"}
+      }
+    },
+    "out_onnx":{"type":"string"},
+    "notes":{"type":"string"}
+  }
+}

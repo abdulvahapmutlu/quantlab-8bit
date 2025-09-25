@@ -1,0 +1,20 @@
+{
+  "title": "Leaderboard Row",
+  "type": "object",
+  "required": ["dataset","model","method","top1","size_mb","b1_p50_ms","b1_p95_ms","b8_p50_ms","b8_p95_ms","b1_throughput_rps"],
+  "properties": {
+    "dataset":{"type":"string"},
+    "model":{"type":"string"},
+    "method":{"type":"string"},
+    "top1":{"type":["number","null"]},
+    "top5":{"type":["number","null"]},
+    "d_top1_pp":{"type":["number","null"]},
+    "size_mb":{"type":["number","null"]},
+    "b1_p50_ms":{"type":["number","null"]},
+    "b1_p95_ms":{"type":["number","null"]},
+    "b8_p50_ms":{"type":["number","null"]},
+    "b8_p95_ms":{"type":["number","null"]},
+    "b1_throughput_rps":{"type":["number","null"]},
+    "notes":{"type":"string"}
+  }
+}

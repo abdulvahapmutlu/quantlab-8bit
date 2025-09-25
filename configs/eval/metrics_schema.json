@@ -1,0 +1,25 @@
+{
+  "title": "FP32 Metrics Schema",
+  "type": "object",
+  "required": ["dataset","model","split_eval","top1","n_eval","hardware","commit"],
+  "properties": {
+    "dataset": {"type":"string"},
+    "model": {"type":"string"},
+    "split_eval": {"type":"string","enum":["test"]},
+    "top1": {"type":"number"},
+    "top5": {"type":"number"},
+    "loss": {"type":"number"},
+    "ece": {"type":"number"},
+    "confusion_matrix_file": {"type":"string"},
+    "hardware": {
+      "type":"object",
+      "properties": {
+        "cpu_model":{"type":"string"},
+        "gpu_model":{"type":"string"},
+        "ram_gb":{"type":"number"}
+      }
+    },
+    "commit": {"type":"string"},
+    "notes": {"type":"string"}
+  }
+}

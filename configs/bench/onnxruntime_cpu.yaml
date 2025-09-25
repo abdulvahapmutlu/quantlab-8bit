@@ -1,0 +1,29 @@
+# ONNX Runtime CPU benchmarking settings
+provider: "CPUExecutionProvider"
+
+session_options:
+  graph_optimization_level: "ORT_ENABLE_ALL"
+  intra_op_num_threads: 6          # i7-10750H has 6 physical cores
+  inter_op_num_threads: 1
+  execution_mode: "sequential"     # to reduce variance
+  enable_cpu_mem_arena: true
+  enable_mem_pattern: true
+
+runtime_env:
+  pin_threads: true                # orchestrator may set affinity externally
+  cpu_affinity_mask: null          # optional hex mask (Windows): e.g., "0x0FFF"
+  flush_denormals: true
+  disable_avx512: false            # set true if you want fair cross-machine comparisons
+
+measurement:
+  warmup_iters: 50
+  measure_iters: 200
+  batches: [1, 8]
+  median_metrics: [p50, p95, p99]  # stats to compute
+  inputs:
+    dynamic_batch_axis: 0          # enforce dynamic axes on export
+  repeats: 3                       # run groups to ensure stable p95
+
+reporting:
+  out_dir: "artifacts/reports/bench"
+  file_prefix: "ort_cpu"

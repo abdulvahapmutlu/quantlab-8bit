@@ -1,0 +1,61 @@
+trainer:
+  task: "image_classification"
+  device: "cuda_if_available"      # fallback to cpu if needed
+  seed_ref: "repro/seeds.json"     # must be honored by the trainer
+
+  # Dataloaders (match determinism policy)
+  batch_size: 128                  # reduce to 96/64 if GPU RAM is tight
+  num_workers: 0                   # strict determinism; speed up later at your risk
+  pin_memory: true
+
+  # Epoching
+  epochs: 20
+  early_stopping: false
+  save_best_on: "val_top1"         # pick best checkpoint by val Top-1
+  gradient_accumulation_steps: 1
+
+  # Optimization
+  optimizer:
+    name: "sgd"                    # alt: "adamw"
+    lr: 0.05
+    momentum: 0.9
+    weight_decay: 0.0001
+    nesterov: true
+
+  # LR schedule
+  scheduler:
+    name: "cosine"
+    warmup_epochs: 2
+    min_lr: 0.0005
+
+  # Regularization
+  label_smoothing: 0.1
+  mixup_cutmix:
+    enabled: false                 # keep fairness for quant comparability
+
+  # Checkpoint & logging
+  out_dir: "artifacts/checkpoints/{model}/{dataset}/fp32"
+  best_filename: "best.pt"
+  save_every_epochs: 0             # 0 = only best + last
+  log_dir: "artifacts/reports/fp32_logs/{model}_{dataset}"
+  curves_csv: "artifacts/reports/fp32_curves/{model}_{dataset}.csv"
+
+  # Val split source (created in Step 5A)
+  val_split_file: "artifacts/reports/splits/{dataset}_train_val.json"
+
+criterion:
+  name: "cross_entropy"
+
+evaluation:
+  # Final evaluation should run on the *test* split after training finishes.
+  compute_top5: true
+  compute_confusion_matrix: true
+  compute_ece: true
+  ece_bins: 15
+  metrics_out: "artifacts/reports/fp32_metrics/{model}_{dataset}.json"
+
+activation_dump:
+  enabled: true
+  layers: "conv_and_linear"        # what to observe for later PTQ heuristics
+  dump_every_n_batches: 0          # 0 = only one eval pass
+  out_file: "artifacts/reports/activations/{model}_{dataset}_fp32_stats.jsonl"

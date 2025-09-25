@@ -1,0 +1,6 @@
+dataset:
+  name: cifar10
+  root: "C:/data/cifar10"     # adjust
+  num_classes: 10
+  input_size: [3, 224, 224]   # upscale for ViT/EfficientNet
+  val_split_file: "artifacts/reports/splits/cifar10_train_val.json"

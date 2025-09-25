@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [ main, develop ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: ${{ runner.os }}-pip-
+
+      - name: Install minimal deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml jsonschema psutil matplotlib onnx onnxruntime
+
+      - name: Import sanity (packages)
+        run: |
+          python - << 'PY'
+          import importlib
+          for m in [
+              "src","src.utils.config","src.utils.reporting",
+              "src.report.leaderboard_builder","src.bench.ort_cpu_bench",
+              "src.eval.parity_torch_vs_onnx","src.eval.parity_onnx_vs_int8",
+              "src.viz.weights_activations","src.viz.error_heatmap",
+              "src.viz.saliency_drift","src.viz.outlier_analysis",
+          ]:
+              importlib.import_module(m)
+              print("OK import:", m)
+          PY
+
+      - name: Create expected folders (artifacts and configs exist already)
+        run: |
+          mkdir -p artifacts/reports/bench
+          mkdir -p artifacts/reports/fp32_metrics
+          mkdir -p artifacts/reports/ptq_static
+          mkdir -p artifacts/reports/ptq_dynamic
+          mkdir -p artifacts/reports/qat
+
+      - name: Produce a dummy bench CSV (so leaderboard can join)
+        run: |
+          echo "dataset,model,method,onnx_path,file_mb,batch,warmup_iters,measure_iters,repeats,p50_ms,p95_ms,p99_ms,rps,provider,ort_version,intra_op_num_threads,inter_op_num_threads,execution_mode,cpu_model,ram_gb,os,notes" > artifacts/reports/bench/ort_cpu_results.csv
+          echo "cifar10,mobilenet_v2,fp32,artifacts/onnx/fp32/mobilenet_v2_cifar10/model.onnx,9.9,1,50,200,1,5.0,5.5,6.0,200.0,CPUExecutionProvider,${{ env.ORT_VERSION || 'unknown' }},6,1,sequential,github,14.0,ubuntu,stub" >> artifacts/reports/bench/ort_cpu_results.csv
+
+      - name: Run leaderboard builder (works even with empty metrics)
+        run: |
+          python -m src.report.leaderboard_builder \
+            --matrix-config configs/experiment_matrix.yaml \
+            --leaderboard-config configs/reporting/leaderboard.yaml \
+            --bench-csv artifacts/reports/bench/ort_cpu_results.csv
+
+      - name: Upload leaderboard artifacts (preview)
+        uses: actions/upload-artifact@v4
+        with:
+          name: leaderboard
+          path: |
+            artifacts/reports/leaderboard.csv
+            artifacts/reports/leaderboard.md
+            artifacts/reports/leaderboard_html/**

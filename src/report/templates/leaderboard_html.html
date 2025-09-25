@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>QuantLab-8bit Leaderboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<style>
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;margin:24px}
+table{border-collapse:collapse;width:100%}
+th,td{border:1px solid #ddd;padding:8px}
+th{position:sticky;top:0;background:#fafafa}
+input,select{margin-right:8px}
+.badge{padding:2px 6px;border-radius:8px;border:1px solid #ddd;font-size:12px}
+</style>
+</head>
+<body>
+<h1>QuantLab-8bit Leaderboard</h1>
+<div>
+  <label>Dataset:
+    <select id="ds"></select>
+  </label>
+  <label>Model:
+    <select id="md"></select>
+  </label>
+  <label>Method:
+    <select id="mt"></select>
+  </label>
+  <input id="q" placeholder="search…" />
+</div>
+<table id="tbl">
+  <thead>
+    <tr id="hdr"></tr>
+  </thead>
+  <tbody id="rows"></tbody>
+</table>
+<p id="disclosure"></p>
+<script>
+(async function(){
+  const resp = await fetch('leaderboard.json').catch(()=>null);
+  if(!resp){ document.getElementById('rows').innerHTML = '<tr><td>Missing leaderboard.json</td></tr>'; return; }
+  const data = await resp.json();
+  const cols = data.columns, rows = data.rows, disclosure = data.hardware || {};
+  const hdr = document.getElementById('hdr');
+  cols.forEach(c=>{ const th=document.createElement('th'); th.textContent=c; hdr.appendChild(th); });
+  const dsSel = document.getElementById('ds'), mdSel = document.getElementById('md'), mtSel = document.getElementById('mt'), q = document.getElementById('q');
+  const uniq = (a,k)=>[...new Set(a.map(r=>r[k]))].sort();
+  function fill(sel, arr){ sel.innerHTML='<option value="">All</option>'+arr.map(v=>`<option>${v}</option>`).join(''); }
+  fill(dsSel, uniq(rows,'dataset')); fill(mdSel, uniq(rows,'model')); fill(mtSel, uniq(rows,'method'));
+  function render(){
+    const body=document.getElementById('rows'); body.innerHTML='';
+    const fds = dsSel.value, fmd = mdSel.value, fmt = mtSel.value, sq = q.value.toLowerCase();
+    rows.filter(r=>(!fds||r.dataset===fds)&&(!fmd||r.model===fmd)&&(!fmt||r.method===fmt)&&(!sq||JSON.stringify(r).toLowerCase().includes(sq)))
+        .forEach(r=>{
+          const tr=document.createElement('tr');
+          cols.forEach(c=>{ const td=document.createElement('td'); td.textContent = r[c] ?? ''; tr.appendChild(td); });
+          body.appendChild(tr);
+        });
+  }
+  dsSel.onchange=mdSel.onchange=mtSel.onchange=q.oninput=render; render();
+  const hw = ['cpu_model','cpu_threads','ram_gb','os','ort_version'].map(k=>`${k}: ${disclosure[k]||''}`).join(' • ');
+  document.getElementById('disclosure').textContent = hw;
+})();
+</script>
+</body>
+</html>

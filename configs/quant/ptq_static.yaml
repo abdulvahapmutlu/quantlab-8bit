@@ -1,0 +1,48 @@
+# Static (calibrated) PTQ recipes. The orchestrator may iterate `recipes` list.
+ptq_static:
+  weight_bits: 8
+  activation_bits: 8
+
+  default_settings:
+    per_channel_weights: true          # per-channel for Conv/Linear where supported
+    weight_symmetric: true
+    act_symmetric: false
+    # Choose one estimator; orchestrator can expand a grid if you keep a list below
+    range_estimator: "minmax"          # choices: minmax | mse | kl
+    percentile_clip: 99.5              # optional activation clipping (SmoothQuant-like equalization done separately)
+    calibrate_batches: 16
+    calibrate_batch_size: 64
+
+  recipes:
+    # ✅ The exact id your CLI uses
+    - id: "pcw_symW_asymA_minmax"
+      per_channel_weights: true
+      weight_symmetric: true
+      act_symmetric: false
+      range_estimator: "minmax"
+      percentile_clip: null
+
+    # Existing recipes (kept)
+    - id: "pcw_symW_asymA_minmax_p995"
+      per_channel_weights: true
+      weight_symmetric: true
+      act_symmetric: false
+      range_estimator: "minmax"
+      percentile_clip: 99.5
+
+    - id: "pcw_symW_asymA_mse_p999"
+      per_channel_weights: true
+      weight_symmetric: true
+      act_symmetric: false
+      range_estimator: "mse"
+      percentile_clip: 99.9
+
+    - id: "ptw_symW_asymA_minmax"
+      per_channel_weights: false
+      weight_symmetric: true
+      act_symmetric: false
+      range_estimator: "minmax"
+      percentile_clip: null
+
+  out_dir: "artifacts/onnx/ptq"
+  report_dir: "artifacts/reports/ptq_static"

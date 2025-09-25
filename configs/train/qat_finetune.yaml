@@ -1,0 +1,43 @@
+trainer:
+  device: "cuda_if_available"
+  seed_ref: "repro/seeds.json"
+
+  batch_size: 128
+  num_workers: 0
+  pin_memory: true
+
+  # Total = warmup + qat_epochs (qat.yaml holds the exact schedule)
+  epochs: 20
+  save_best_on: "val_top1"
+  gradient_accumulation_steps: 1
+
+  optimizer:
+    name: "sgd"          # or adamw; start conservative for stability
+    lr: 0.02             # lower than FP32 baseline
+    momentum: 0.9
+    weight_decay: 0.0001
+    nesterov: true
+
+  scheduler:
+    name: "cosine"
+    warmup_epochs: 2
+    min_lr: 0.0003
+
+  label_smoothing: 0.1
+  mixup_cutmix:
+    enabled: false
+
+  out_dir: "artifacts/checkpoints/{model}/{dataset}/qat"
+  best_filename: "best_qat.pt"
+  log_dir: "artifacts/reports/qat_logs/{model}_{dataset}"
+  curves_csv: "artifacts/reports/qat_curves/{model}_{dataset}.csv"
+
+  # Reuse the seeded train/val split from Step 5
+  val_split_file: "artifacts/reports/splits/{dataset}_train_val.json"
+
+evaluation:
+  compute_top5: true
+  compute_confusion_matrix: false
+  compute_ece: true
+  ece_bins: 15
+  metrics_out: "artifacts/reports/qat/{model}_{dataset}_metrics.json"

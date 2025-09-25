@@ -1,0 +1,22 @@
+{
+  "title": "Visualization Manifest",
+  "type": "object",
+  "required": ["dataset","model","method","items"],
+  "properties": {
+    "dataset": {"type":"string"},
+    "model": {"type":"string"},
+    "method": {"type":"string"},
+    "items": {
+      "type":"array",
+      "items": {
+        "type":"object",
+        "required": ["title","path"],
+        "properties": {
+          "title":{"type":"string"},
+          "path":{"type":"string"},
+          "notes":{"type":"string"}
+        }
+      }
+    }
+  }
+}

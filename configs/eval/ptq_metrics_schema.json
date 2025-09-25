@@ -1,0 +1,16 @@
+{
+  "title": "PTQ Metrics (Val)",
+  "type": "object",
+  "required": ["dataset","model","method","top1","n_eval","size_mb"],
+  "properties": {
+    "dataset":{"type":"string"},
+    "model":{"type":"string"},
+    "method":{"type":"string"},  // e.g., "ptq_static:pcw_symW_asymA_minmax_p995" or "ptq_dynamic"
+    "top1":{"type":"number"},
+    "top5":{"type":"number"},
+    "loss":{"type":"number"},
+    "n_eval":{"type":"integer"},
+    "size_mb":{"type":"number"},
+    "notes":{"type":"string"}
+  }
+}

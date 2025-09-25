@@ -1,0 +1,39 @@
+parity:
+  # Dataset / loader
+  n_samples: 128
+  batch_size: 32
+  num_workers: 0
+  seed_ref: repro/seeds.json
+
+  # Tap settings — these produce the per-layer “taps” needed for the heatmap
+  logits_only: false           # must be false to emit layer taps
+  tap_ops:                     # ONNX op types to capture
+    - Conv
+    - Gemm
+    - MatMul
+    - Add
+    - Relu
+    - Sigmoid
+    - GlobalAveragePool
+    - Flatten
+    - Softmax
+  max_taps_per_op: 32          # cap how many nodes per op type to keep (first K)
+
+  # (Optional) If you want to further focus which nodes are tapped by name:
+  # tap_name_include:
+  #   - "conv*"
+  #   - "layer*"
+  #   - "downsample*"
+  # tap_name_exclude:
+  #   - "fc"
+
+  # Acceptance thresholds (for summary flags only; doesn’t affect tap capture)
+  thresholds:
+    cos_min_fp32_vs_fp32: 0.999
+    mse_max_fp32_vs_fp32: 1.0e-6
+    cos_min_fp32_vs_int8: 0.990
+    mse_max_fp32_vs_int8: 5.0e-4
+
+  # Output control
+  out_dir: artifacts/reports/parity
+  save_csv: true

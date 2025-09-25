@@ -1,0 +1,34 @@
+{
+  "title": "ORT CPU Bench Result",
+  "type": "object",
+  "required": ["dataset","model","method","onnx_path","batch","p50_ms","p95_ms","p99_ms","rps","env"],
+  "properties": {
+    "dataset": {"type":"string"},
+    "model": {"type":"string"},
+    "method": {"type":"string"},
+    "onnx_path": {"type":"string"},
+    "file_mb": {"type":"number"},
+    "batch": {"type":"integer"},
+    "warmup_iters": {"type":"integer"},
+    "measure_iters": {"type":"integer"},
+    "repeats": {"type":"integer"},
+    "p50_ms": {"type":"number"},
+    "p95_ms": {"type":"number"},
+    "p99_ms": {"type":"number"},
+    "rps": {"type":"number"},
+    "env": {
+      "type": "object",
+      "properties": {
+        "provider": {"type":"string"},
+        "ort_version": {"type":"string"},
+        "intra_op_num_threads": {"type":"integer"},
+        "inter_op_num_threads": {"type":"integer"},
+        "execution_mode": {"type":"string"},
+        "cpu_model": {"type":"string"},
+        "ram_gb": {"type":"number"},
+        "os": {"type":"string"}
+      }
+    },
+    "notes": {"type":"string"}
+  }
+}

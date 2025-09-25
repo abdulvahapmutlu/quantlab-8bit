@@ -1,0 +1,51 @@
+{
+  "title": "Parity Report",
+  "type": "object",
+  "required": [ "dataset", "model", "ref", "cmp", "n_samples", "summary", "per_tap" ],
+  "properties": {
+    "dataset": { "type": "string" },
+    "model": { "type": "string" },
+    "ref": {
+      "type": "object",
+      "required": [ "method", "onnx_path" ],
+      "properties": {
+        "method": { "type": "string" },
+        "onnx_path": { "type": "string" }
+      }
+    },
+    "cmp": {
+      "type": "object",
+      "required": [ "method", "onnx_path" ],
+      "properties": {
+        "method": { "type": "string" },
+        "onnx_path": { "type": "string" }
+      }
+    },
+    "n_samples": { "type": "integer" },
+    "summary": {
+      "type": "object",
+      "required": [ "cos_min", "cos_mean", "mse_max", "mse_mean", "pass" ],
+      "properties": {
+        "cos_min": { "type": "number" },
+        "cos_mean": { "type": "number" },
+        "mse_max": { "type": "number" },
+        "mse_mean": { "type": "number" },
+        "pass": { "type": "boolean" },
+        "notes": { "type": "string" }
+      }
+    },
+    "per_tap": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [ "name", "op_type", "cos", "mse" ],
+        "properties": {
+          "name": { "type": "string" },
+          "op_type": { "type": "string" },
+          "cos": { "type": "number" },
+          "mse": { "type": "number" }
+        }
+      }
+    }
+  }
+}
