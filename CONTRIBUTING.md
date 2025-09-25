@@ -113,3 +113,15 @@ Use clear, imperative subject lines:
 
 - Update `README.md` for new features or breaking changes.
 
+## Opening a Pull Request
+
+- Make sure pre-commit passes:  
+  ```
+  pre-commit run -a
+  ```
+
+* Add/adjust configs and minimal docs.
+* Include before/after numbers (accuracy/latency) for quant changes.
+* Reference any issues and describe rationale + tradeoffs.
+
+Thanks for contributing! 🎉
